@@ -1,47 +1,58 @@
 {
-  "name": "LiveGram Bot",
-  "description": "Modular  Telegram Bot powered by @TheChampu!",
-  "logo": "https://files.catbox.moe/mtrkt5.jpg",
-  "keywords": [
-    "telegram",
-    "bot",
-    "plugin",
-    "modular",
-    "productivity",
-    "relay",
-    "channel",
-    "administrators"
-  ],
-  "repository": "https://github.com/TheChampu/Livegram",
-  "website": "https://telegram.dog/TheChampu",
-  "success_url": "https://t.me/ShivanshuHUB",
-  "env": {
-    "APP_ID": {
-      "description": "Get this value from my.telegram.org! Please do not steal"
+    "name": "Livegram Bot",
+    "description": "A simple Chat-Bot written in Pyrogram using MongoDB",
+    "logo": "https://files.catbox.moe/mtrkt5.jpg",
+    "keywords": [
+      "champu",
+      "mongodb",
+      "python",
+      "pyrogram"
+    ],
+      "buildpacks": [{
+      "url": "heroku/python"
+    }],
+    "formation": {
+      "worker": {
+        "quantity": 1,
+        "size": "free"
+      }
     },
-    "API_HASH": {
-      "description": "Get this value from my.telegram.org! Please do not steal"
-    },
-    "TG_BOT_TOKEN": {
-      "description": "Obtain a Telegram bot token by contacting @BotFather"
-    },
-    "AUTH_CHANNEL": {
-      "description": "List down the user IDs who should have permission to use and reply to users, seperated by SPACE. To get user ids, send /id command to Telegram @OwnErObOT"
-    }
-  },
-  "addons": [{
-    "plan": "heroku-postgresql",
-    "options": {
-      "version": "14"
-    }
-  }],
-  "buildpacks": [{
-    "url": "heroku/python"
-  }],
-  "formation": {
-    "worker": {
-      "quantity": 1,
-      "size": "basic"
+    "repository": "https://github.com/TheChampu/Livegram",
+    "env": {
+      "API_ID": {
+        "description": "Get this value from my.telegram.org/apps.",
+        "required": true,
+        "value": ""
+      },
+      "API_HASH": {
+        "description": "Get this value from my.telegram.org/apps.",
+        "required": true,
+        "value": ""
+      },
+      "BOT_TOKEN": {
+        "description": "A Bot token from @BotFather",
+        "required": true,
+        "value": ""
+      },
+      "LOG_GROUP_ID": {
+        "description": "A group id to forward the incoming messages in it.",
+        "required": true,
+        "value": ""
+      },
+      "MONGO_DB_URI": {
+        "description": "Get a mongodb url from https://cloud.mongodb.com.",
+        "required": false,
+        "value": ""
+      },
+      "PRIVATE_START_MESSAGE": {
+        "description": "A welcome message for your bot when someone starts it",
+        "required": true,
+        "value": ""
+      },
+      "SUDO_USER": {
+        "description": "The user id(s) of user(s) whom you would like to add as a SUDO_USER, Multiple values shall be seperated with a space.",
+        "required": true,
+        "value": ""
+      }
     }
   }
-}
