@@ -35,19 +35,12 @@ class Bot(Client):
         self.LOGGER = LOGGER
 
     async def start(self):
-        # First synchronize time by sending a ping
-        current_time = int(time.time() * 1e9)  # Convert to nanoseconds
-        try:
-            await self.send(Ping(ping_id=current_time))
-        except Exception as e:
-            self.LOGGER(__name__).warning(f"Time sync failed: {e}")
-            # Wait a bit and retry
-            time.sleep(2)
-            current_time = int(time.time() * 1e9)
-            await self.send(Ping(ping_id=current_time))
+        # First start the client
+        await super().start()
 
-        await super().start()  # Then start the client
-
+        # Time synchronization is handled automatically by Pyrogram during start()
+        # We don't need to manually send Ping anymore
+        
         usr_bot_me = await self.get_me()
         self.set_parse_mode("html")
         try:
@@ -61,6 +54,7 @@ class Bot(Client):
         else:
             if check_m:
                 self.commandi[START_COMMAND] = check_m.text.html
+        
         self.LOGGER(__name__).info(
             f"@{usr_bot_me.username} based on Pyrogram v{__version__} "
             "Try /start."
