@@ -1,4 +1,5 @@
 from pyrogram import Client, __version__
+from pyrogram.errors import BadRequest
 from bot import (
     API_HASH,
     APP_ID,
@@ -13,8 +14,6 @@ from bot import (
 import time
 import asyncio
 from datetime import datetime
-from pyrogram.api.errors import BadMsgNotification
-from pyrogram.errors import BadRequest
 
 class Bot(Client):
     """ modded client for NoPMsBot """
@@ -32,11 +31,10 @@ class Bot(Client):
         self.LOGGER = LOGGER
 
     async def check_time_sync(self):
-        """Verify system time is synchronized"""
+        """Verify system time is roughly correct"""
         self.LOGGER(__name__).info(f"System time: {datetime.utcnow()}")
-        # Verify time is roughly correct (within 30 seconds of actual time)
         if abs(time.time() - time.mktime(datetime.utcnow().timetuple())) > 30:
-            self.LOGGER(__name__).error("System time is out of sync!")
+            self.LOGGER(__name__).warning("System time might be out of sync!")
 
     async def start(self):
         # First verify time sync
@@ -48,24 +46,27 @@ class Bot(Client):
             try:
                 await super().start()
                 break
-            except BadMsgNotification as e:
-                if attempt == max_retries - 1:
-                    raise
-                wait_time = 2 * (attempt + 1)
-                self.LOGGER(__name__).warning(
-                    f"Time sync error (attempt {attempt + 1}/{max_retries}). "
-                    f"Retrying in {wait_time} seconds..."
-                )
-                await asyncio.sleep(wait_time)
             except Exception as e:
-                if attempt == max_retries - 1:
-                    raise
-                wait_time = 5 * (attempt + 1)
-                self.LOGGER(__name__).warning(
-                    f"Connection failed (attempt {attempt + 1}/{max_retries}). "
-                    f"Retrying in {wait_time} seconds... Error: {str(e)}"
-                )
-                await asyncio.sleep(wait_time)
+                if "msg_id too low" in str(e) or "time has to be synchronized" in str(e):
+                    # Time sync error
+                    if attempt == max_retries - 1:
+                        raise
+                    wait_time = 2 * (attempt + 1)
+                    self.LOGGER(__name__).warning(
+                        f"Time sync error (attempt {attempt + 1}/{max_retries}). "
+                        f"Retrying in {wait_time} seconds..."
+                    )
+                    await asyncio.sleep(wait_time)
+                else:
+                    # Other connection error
+                    if attempt == max_retries - 1:
+                        raise
+                    wait_time = 5 * (attempt + 1)
+                    self.LOGGER(__name__).warning(
+                        f"Connection failed (attempt {attempt + 1}/{max_retries}). "
+                        f"Retrying in {wait_time} seconds... Error: {str(e)}"
+                    )
+                    await asyncio.sleep(wait_time)
 
         # Bot setup
         usr_bot_me = await self.get_me()
