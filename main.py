@@ -25,8 +25,15 @@ save = {}
 grouplist = 1
 
 
+import time
+from pyrogram.raw.functions import Ping
+
 async def init():
-    await app.start()
+    # Synchronize time with Telegram servers
+    current_time = int(time.time() * 1e9)  # Convert to nanoseconds
+    await app.connect()  # Connect the client without starting it
+    await app.send(Ping(ping_id=current_time))  # Send a Ping request to sync time
+    await app.start()  # Start the client after time sync
 
     @app.on_message(filters.command(["start", "help"]))
     async def start_command(_, message: Message):
