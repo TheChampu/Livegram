@@ -14,6 +14,8 @@ from bot import (
     TG_BOT_WORKERS
 )
 
+import time
+from pyrogram.raw.functions import Ping
 
 class Bot(Client):
     """ modded client for NoPMsBot """
@@ -33,6 +35,10 @@ class Bot(Client):
         self.LOGGER = LOGGER
 
     async def start(self):
+        # Synchronize time with Telegram servers
+        current_time = int(time.time() * 1e9)  # Convert to nanoseconds
+        await self.invoke(Ping(ping_id=current_time))
+
         await super().start()
         usr_bot_me = await self.get_me()
         self.set_parse_mode("html")
