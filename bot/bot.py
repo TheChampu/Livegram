@@ -37,7 +37,7 @@ class Bot(Client):
     async def start(self):
         # Synchronize time with Telegram servers
         current_time = int(time.time() * 1e9)  # Convert to nanoseconds
-        await self.invoke(Ping(ping_id=current_time))
+        await self.send(Ping(ping_id=current_time))  # Use send instead of invoke
 
         await super().start()
         usr_bot_me = await self.get_me()
