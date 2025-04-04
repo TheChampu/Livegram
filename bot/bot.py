@@ -35,11 +35,18 @@ class Bot(Client):
         self.LOGGER = LOGGER
 
     async def start(self):
-        await super().start()  # Start the client first
-
-        # Synchronize time with Telegram servers
+        # First synchronize time by sending a ping
         current_time = int(time.time() * 1e9)  # Convert to nanoseconds
-        await self.send(Ping(ping_id=current_time))  # Send Ping after starting the client
+        try:
+            await self.send(Ping(ping_id=current_time))
+        except Exception as e:
+            self.LOGGER(__name__).warning(f"Time sync failed: {e}")
+            # Wait a bit and retry
+            time.sleep(2)
+            current_time = int(time.time() * 1e9)
+            await self.send(Ping(ping_id=current_time))
+
+        await super().start()  # Then start the client
 
         usr_bot_me = await self.get_me()
         self.set_parse_mode("html")
