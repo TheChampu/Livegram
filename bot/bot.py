@@ -13,7 +13,8 @@ from bot import (
 import time
 import asyncio
 from datetime import datetime
-from pyrogram.errors import BadMsgNotification, ConnectionError
+from pyrogram.api.errors import BadMsgNotification
+from pyrogram.errors import BadRequest
 
 class Bot(Client):
     """ modded client for NoPMsBot """
@@ -33,12 +34,14 @@ class Bot(Client):
     async def check_time_sync(self):
         """Verify system time is synchronized"""
         self.LOGGER(__name__).info(f"System time: {datetime.utcnow()}")
-        # Add any additional time checks here if needed
+        # Verify time is roughly correct (within 30 seconds of actual time)
+        if abs(time.time() - time.mktime(datetime.utcnow().timetuple())) > 30:
+            self.LOGGER(__name__).error("System time is out of sync!")
 
     async def start(self):
-        # Verify time sync first
+        # First verify time sync
         await self.check_time_sync()
-        
+
         # Connection retry logic
         max_retries = 3
         for attempt in range(max_retries):
@@ -54,13 +57,13 @@ class Bot(Client):
                     f"Retrying in {wait_time} seconds..."
                 )
                 await asyncio.sleep(wait_time)
-            except ConnectionError as e:
+            except Exception as e:
                 if attempt == max_retries - 1:
                     raise
                 wait_time = 5 * (attempt + 1)
                 self.LOGGER(__name__).warning(
                     f"Connection failed (attempt {attempt + 1}/{max_retries}). "
-                    f"Retrying in {wait_time} seconds..."
+                    f"Retrying in {wait_time} seconds... Error: {str(e)}"
                 )
                 await asyncio.sleep(wait_time)
 
@@ -75,7 +78,7 @@ class Bot(Client):
                 replies=0
             )
             self.commandi[START_COMMAND] = check_m.text.html if check_m else DEFAULT_START_TEXT
-        except Exception as e:
+        except BadRequest as e:
             self.LOGGER(__name__).warning(f"Failed to get start message: {e}")
             self.commandi[START_COMMAND] = DEFAULT_START_TEXT
 
