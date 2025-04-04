@@ -46,7 +46,7 @@ START_COMMAND = get_config("START_COMMAND", "start")
 DEFAULT_START_TEXT = (
     "Hay, silahkan ketik pesanmu dibawah ini, nanti saya akan membalasanya Jika sudah online.\n"
     "───────────────────────\n"
-    "©Manage by : @Vckyouubitch"
+    "©Manage by : @TheChampu"
 )
 # /start message when other users start your bot
 START_OTHER_USERS_TEXT = int(get_config(
@@ -58,7 +58,7 @@ ONLINE_CHECK_START_TEXT = get_config(
     "ONLINE_CHECK_START_TEXT",
     (
         "Sistem berfungsi <b>master</b>\n"
-        "Jangan lupa join [Channel Support](https://t.me/Vckyouuu)"
+        "Jangan lupa join [Channel Support](https://t.me/ShivanshuHUB)"
     )
 )
 # message to indicate,
@@ -68,7 +68,7 @@ DELETED_MESSAGES_NOTIFICATION_TEXT = get_config(
     "DELETED_MESSAGES_NOTIFICATION_TEXT",
     (
         "Pesan ini sudah dihapus\n"
-        "Jangan lupa Join [Channel Support](https://t.me/Vckyouuu)"
+        "Jangan lupa Join [Channel Support](https://t.me/ShivanshuHUB)"
     )
 )
 # IDEKWBYRW
