@@ -1,0 +1,47 @@
+{
+  "name": "LiveGram Bot",
+  "description": "Modular  Telegram Bot powered by @TheChampu!",
+  "logo": "https://files.catbox.moe/mtrkt5.jpg",
+  "keywords": [
+    "telegram",
+    "bot",
+    "plugin",
+    "modular",
+    "productivity",
+    "relay",
+    "channel",
+    "administrators"
+  ],
+  "repository": "https://github.com/TheChampu/Livegram",
+  "website": "https://telegram.dog/TheChampu",
+  "success_url": "https://t.me/ShivanshuHUB",
+  "env": {
+    "APP_ID": {
+      "description": "Get this value from my.telegram.org! Please do not steal"
+    },
+    "API_HASH": {
+      "description": "Get this value from my.telegram.org! Please do not steal"
+    },
+    "TG_BOT_TOKEN": {
+      "description": "Obtain a Telegram bot token by contacting @BotFather"
+    },
+    "AUTH_CHANNEL": {
+      "description": "List down the user IDs who should have permission to use and reply to users, seperated by SPACE. To get user ids, send /id command to Telegram @OwnErObOT"
+    }
+  },
+  "addons": [{
+    "plan": "heroku-postgresql",
+    "options": {
+      "version": "12"
+    }
+  }],
+  "buildpacks": [{
+    "url": "heroku/python"
+  }],
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "basic"
+    }
+  }
+}
