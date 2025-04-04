@@ -35,11 +35,12 @@ class Bot(Client):
         self.LOGGER = LOGGER
 
     async def start(self):
+        await super().start()  # Start the client first
+
         # Synchronize time with Telegram servers
         current_time = int(time.time() * 1e9)  # Convert to nanoseconds
-        await self.send(Ping(ping_id=current_time))  # Use send instead of invoke
+        await self.send(Ping(ping_id=current_time))  # Send Ping after starting the client
 
-        await super().start()
         usr_bot_me = await self.get_me()
         self.set_parse_mode("html")
         try:
